@@ -11,42 +11,42 @@ modprobe zram
 #swap on ZRAM
 
 #4 smaller zram drvices
-#zram0
+#zram1
 echo zstd > /sys/block/zram0/comp_algorithm
-echo 4G > /sys/block/zram0/disksize
-echo 1673M > /sys/block/zram0/mem_limit
+echo 957M > /sys/block/zram0/disksize
+echo 957M > /sys/block/zram0/mem_limit
 mkswap --label zram0 /dev/zram0
 swapon --priority 32767 /dev/zram0
 
-#zram1
+#zram2
 cat /sys/class/zram-control/hot_add
 echo zstd > /sys/block/zram1/comp_algorithm
-echo 4G > /sys/block/zram1/disksize
-echo 1673M > /sys/block/zram1/mem_limit
+echo 957M > /sys/block/zram1/disksize
+echo 957M > /sys/block/zram1/mem_limit
 mkswap --label zram1 /dev/zram1
 swapon --priority 32767 /dev/zram1
 
-#zram2
+#zram3
 cat /sys/class/zram-control/hot_add
 echo zstd > /sys/block/zram2/comp_algorithm
-echo 4G > /sys/block/zram2/disksize
-echo 1673M > /sys/block/zram2/mem_limit
+echo 957M > /sys/block/zram2/disksize
+echo 957M > /sys/block/zram2/mem_limit
 mkswap --label zram2 /dev/zram2
 swapon --priority 32767 /dev/zram2
 
-#zram3
+#zram4
 cat /sys/class/zram-control/hot_add
 echo zstd > /sys/block/zram3/comp_algorithm
-echo 4G > /sys/block/zram3/disksize
-echo 1673M > /sys/block/zram3/mem_limit
+echo 957M > /sys/block/zram3/disksize
+echo 957M > /sys/block/zram3/mem_limit
 mkswap --label zram3 /dev/zram3
 swapon --priority 32767 /dev/zram3
 
 # /tmp on ZRAM
 cat /sys/class/zram-control/hot_add
 echo zstd > /sys/block/zram4/comp_algorithm
-echo 16G > /sys/block/zram4/disksize
-echo 6693M > /sys/block/zram4/mem_limit
+echo 3.74G > /sys/block/zram4/disksize
+echo 3829M > /sys/block/zram4/mem_limit
 mkfs.ext4 /dev/zram4
 mount -t tmpfs -o size=0,nr_inodes=0 tmpfs /tmp
 mount /dev/zram4 /tmp
