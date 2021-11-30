@@ -1,0 +1,12 @@
+[Unit]
+Description=ZRAM Config (swap, /tmp, and kernel parameter tweaks)
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zram-config-on
+ExecStop=/usr/local/bin/zram-config-off
+RemainAfterExit=yes
+
+[Install]
+WantedBy = multi-user.target

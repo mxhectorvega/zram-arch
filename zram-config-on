@@ -1,0 +1,88 @@
+#!/bin/bash
+
+#ZRAM Config 
+
+#Disable zswap
+echo 0 > /sys/module/zswap/parameters/enabled
+
+modprobe zram
+
+
+#swap on ZRAM
+
+#4 smaller zram drvices
+#zram0
+echo zstd > /sys/block/zram0/comp_algorithm
+echo 4G > /sys/block/zram0/disksize
+echo 1673M > /sys/block/zram0/mem_limit
+mkswap --label zram0 /dev/zram0
+swapon --priority 32767 /dev/zram0
+
+#zram1
+cat /sys/class/zram-control/hot_add
+echo zstd > /sys/block/zram1/comp_algorithm
+echo 4G > /sys/block/zram1/disksize
+echo 1673M > /sys/block/zram1/mem_limit
+mkswap --label zram1 /dev/zram1
+swapon --priority 32767 /dev/zram1
+
+#zram2
+cat /sys/class/zram-control/hot_add
+echo zstd > /sys/block/zram2/comp_algorithm
+echo 4G > /sys/block/zram2/disksize
+echo 1673M > /sys/block/zram2/mem_limit
+mkswap --label zram2 /dev/zram2
+swapon --priority 32767 /dev/zram2
+
+#zram3
+cat /sys/class/zram-control/hot_add
+echo zstd > /sys/block/zram3/comp_algorithm
+echo 4G > /sys/block/zram3/disksize
+echo 1673M > /sys/block/zram3/mem_limit
+mkswap --label zram3 /dev/zram3
+swapon --priority 32767 /dev/zram3
+
+# /tmp on ZRAM
+cat /sys/class/zram-control/hot_add
+echo zstd > /sys/block/zram4/comp_algorithm
+echo 16G > /sys/block/zram4/disksize
+echo 6693M > /sys/block/zram4/mem_limit
+mkfs.ext4 /dev/zram4
+mount -t tmpfs -o size=0,nr_inodes=0 tmpfs /tmp
+mount /dev/zram4 /tmp
+chmod 1777 /tmp
+
+#Virtual Memory Kernel Tweaks default for low-memory systems)
+# swappiness is optimal between 80-100, depending on load.
+sysctl -w vm.swappiness=85
+sysctl -w vm.vfs_cache_pressure=500
+sysctl -w vm.dirty_background_ratio=1
+sysctl -w vm.dirty_ratio=50
+sysctl -w vm.page-cluster=0
+#-----------------------------------------------------------------------------------------------------------------------
+#NOTE: if above 4 zram devices + /tmp is used, then the one large zram device + /tmp below need to be commented out, and visa versa if using the above
+
+#one large zram device
+#echo zstd > /sys/block/zram0/comp_algorithm
+#echo 16G > /sys/block/zram0/disksize
+#echo 6693M > /sys/block/zram0/mem_limit
+#mkswap --label zram0 /dev/zram0
+#swapon --priority 32767 /dev/zram0
+
+# /tmp on ZRAM - device name changed to work with above
+#cat /sys/class/zram-control/hot_add
+#echo zstd > /sys/block/zram1/comp_algorithm
+#echo 16G > /sys/block/zram1/disksize
+#echo 6693M > /sys/block/zram1/mem_limit
+#mkfs.ext4 /dev/zram1
+#mount -t tmpfs -o size=0,nr_inodes=0 tmpfs /tmp
+#mount /dev/zram4 /tmp
+#chmod 1777 /tmp
+
+#Reference
+#based on 8GB (7.69GB usable)
+#50%=3937M
+#80=6300M
+#85%=6693M
+#90%=7087M
+

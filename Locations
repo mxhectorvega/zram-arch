@@ -1,0 +1,6 @@
+/usr/local/bin
+
+/etc/systemd/system
+
+#Nix that. It's better to include it in the script.
+/etc/sysctl.d
