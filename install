@@ -25,6 +25,8 @@ sudo systemctl enable --now zram-config
 clear
 printf '\n \nConfiguraciones aplicadas!'
 sleep 1
+printf '\n \nReincie para aplicar los cambios.'
+sleep 1
 printf '\n \nContribuye paypal.me/hivz'
 sleep 1
 printf '\n \n'
